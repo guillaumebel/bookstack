@@ -1,0 +1,90 @@
+﻿{
+  "common": {
+    "login": "Se connecter",
+    "logout": "Déconnexion",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "add": "Ajouter",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "search": "Rechercher",
+    "menu": "Menu"
+  },
+  "app": {
+    "title": "BookStack",
+    "adminTitle": "BookStack Admin"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "books": "Livres",
+    "authors": "Auteurs",
+    "categories": "Catégories"
+  },
+  "login": {
+    "title": "BookStack Admin",
+    "subtitle": "Veuillez vous connecter pour accéder au panneau d'administration",
+    "usernameRequired": "Le nom d'utilisateur est requis",
+    "passwordRequired": "Le mot de passe est requis",
+    "invalidCredentials": "Identifiants invalides. Veuillez réessayer.",
+    "defaultCredentials": "Identifiants par défaut :",
+    "defaultUsername": "Nom d'utilisateur : admin",
+    "defaultPassword": "Mot de passe : password"
+  },
+  "books": {
+    "title": "Livres",
+    "addBook": "Ajouter un livre",
+    "editBook": "Modifier le livre",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce livre ?",
+    "noBooks": "Aucun livre trouvé",
+    "fields": {
+      "title": "Titre",
+      "author": "Auteurs",
+      "category": "Catégories",
+      "publishedDate": "Date de publication",
+      "isbn": "ISBN",
+      "description": "Description",
+      "pageCount": "Nombre de pages",
+      "price": "Prix",
+      "language": "Langue",
+      "thumbnail": "URL de la miniature"
+    },
+    "validation": {
+      "titleRequired": "Le titre est requis",
+      "authorRequired": "Au moins un auteur est requis",
+      "categoryRequired": "Au moins une catégorie est requise",
+      "isbnRequired": "L'ISBN est requis",
+      "pageCountRequired": "Le nombre de pages est requis",
+      "priceRequired": "Le prix est requis",
+      "publishedDateRequired": "La date de publication est requise"
+    }
+  },
+  "authors": {
+    "title": "Auteurs",
+    "noAuthors": "Aucun auteur trouvé"
+  },
+  "categories": {
+    "title": "Catégories",
+    "noCategories": "Aucune catégorie trouvée"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue dans BookStack Admin",
+    "totalBooks": "Total des livres",
+    "totalAuthors": "Total des auteurs",
+    "totalCategories": "Total des catégories"
+  },
+  "forms": {
+    "required": "Ce champ est requis",
+    "minLength": "Doit contenir au moins {{count}} caractères",
+    "maxLength": "Doit contenir au maximum {{count}} caractères",
+    "invalidUrl": "Veuillez entrer une URL valide",
+    "invalidEmail": "Veuillez entrer un email valide",
+    "selectAtLeastOne": "Veuillez sélectionner au moins une option"
+  }
+}

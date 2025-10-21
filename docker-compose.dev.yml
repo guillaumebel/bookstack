@@ -1,0 +1,33 @@
+﻿version: "3.8"
+
+# Development configuration - run only database in Docker
+# API and Frontend run locally for hot reload
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bookstack-db-dev
+    environment:
+      POSTGRES_DB: bookcatalog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      # Mount init scripts if any
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - bookstack-dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bookcatalog"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  bookstack-dev:
+    driver: bridge

@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: bookstack-db
+    environment:
+      POSTGRES_DB: bookcatalog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - bookstack-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bookcatalog"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # .NET API Backend
+  api:
+    build:
+      context: ./BookStack.Api/BookStack.Api
+      dockerfile: Dockerfile
+    container_name: bookstack-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=bookcatalog;Username=postgres;Password=postgres
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "5097:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookstack-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./bookstack-app
+      dockerfile: Dockerfile
+    container_name: bookstack-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5097
+      - REACT_APP_GRAPHQL_URL=http://localhost:5097/graphql
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - bookstack-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  bookstack-network:
+    driver: bridge
