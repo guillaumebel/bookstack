@@ -9,7 +9,7 @@ import {
   CardContent,
   Chip,
   CircularProgress,
-  GridLegacy as Grid,
+  Grid,
   TextField,
   Typography,
 } from "@mui/material";
@@ -27,7 +27,6 @@ import {
   GET_CATEGORIES,
 } from "../graphql/queries";
 
-// Form validation schema factory
 const createBookSchema = (t: (key: string) => string) =>
   z.object({
     title: z.string().min(1, t("books.validation.titleRequired")),
@@ -35,7 +34,7 @@ const createBookSchema = (t: (key: string) => string) =>
     description: z.string().optional(),
     publishedDate: z.date().optional(),
     pageCount: z.number().min(1).optional(),
-    thumbnail: z.string().url().optional().or(z.literal("")),
+    thumbnail: z.url().optional().or(z.literal("")),
     language: z.string().optional(),
     authorIds: z.array(z.number()).min(1, t("books.validation.authorRequired")),
     categoryIds: z
@@ -207,7 +206,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
             <Grid container spacing={3}>
               {/* Title */}
-              <Grid item xs={12} md={8}>
+              <Grid size={{ xs: 12, md: 8 }}>
                 <Controller
                   name="title"
                   control={control}
@@ -225,7 +224,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
               </Grid>
 
               {/* ISBN */}
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Controller
                   name="isbn"
                   control={control}
@@ -242,7 +241,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
               </Grid>
 
               {/* Description */}
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Controller
                   name="description"
                   control={control}
@@ -261,7 +260,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
               </Grid>
 
               {/* Published Date */}
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Controller
                   name="publishedDate"
                   control={control}
@@ -283,7 +282,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
               </Grid>
 
               {/* Page Count */}
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Controller
                   name="pageCount"
                   control={control}
@@ -306,7 +305,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
               </Grid>
 
               {/* Language */}
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Controller
                   name="language"
                   control={control}
@@ -323,7 +322,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
               </Grid>
 
               {/* Thumbnail URL */}
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Controller
                   name="thumbnail"
                   control={control}
@@ -340,7 +339,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
               </Grid>
 
               {/* Authors */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Controller
                   name="authorIds"
                   control={control}
@@ -380,7 +379,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
               </Grid>
 
               {/* Categories */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Controller
                   name="categoryIds"
                   control={control}
@@ -420,7 +419,7 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
               </Grid>
 
               {/* Actions */}
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Box display="flex" gap={2} justifyContent="flex-end" mt={2}>
                   <Button onClick={onCancel} disabled={loading}>
                     {t("common.cancel")}

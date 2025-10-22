@@ -7,7 +7,7 @@ import {
   Alert,
   Box,
   Button,
-  GridLegacy as Grid,
+  Grid,
   LinearProgress,
   Paper,
   TextField,
@@ -184,7 +184,7 @@ export const GoogleBooksSearchPage: React.FC = () => {
 
       <Paper sx={{ p: 3, mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               fullWidth
               label={t("import.searchLabel")}
@@ -200,7 +200,7 @@ export const GoogleBooksSearchPage: React.FC = () => {
               placeholder={t("import.searchPlaceholder")}
             />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               fullWidth
               label={t("import.authorFilter")}
@@ -209,7 +209,7 @@ export const GoogleBooksSearchPage: React.FC = () => {
               placeholder={t("import.authorFilterPlaceholder")}
             />
           </Grid>
-          <Grid item xs={12} md={2}>
+          <Grid size={{ xs: 12, md: 2 }}>
             <Box display="flex" flexDirection="column" gap={1}>
               {hasResults && availableToImportCount > 0 && (
                 <>
@@ -263,7 +263,7 @@ export const GoogleBooksSearchPage: React.FC = () => {
       {hasResults && (
         <Grid container spacing={2}>
           {searchResults.items.map((book: GoogleBookItem) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={book.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={book.id}>
               <GoogleBookCard
                 book={book}
                 isSelected={selectedBooks.has(book.id)}

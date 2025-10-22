@@ -14,7 +14,7 @@ import {
   CardContent,
   Chip,
   CircularProgress,
-  GridLegacy as Grid,
+  Grid,
   List,
   ListItem,
   ListItemAvatar,
@@ -124,7 +124,7 @@ export const DashboardPage: React.FC = () => {
       <Grid container spacing={3}>
         {/* Statistics Cards */}
         {stats.map((stat, index) => (
-          <Grid item xs={12} sm={4} key={index}>
+          <Grid size={{ xs: 12, sm: 4 }} key={index}>
             <Card>
               <CardContent>
                 <Box display="flex" alignItems="center">
@@ -161,7 +161,7 @@ export const DashboardPage: React.FC = () => {
         </Typography>
         <Grid container spacing={2}>
           {quickActions.map((action, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <Button
                 variant="outlined"
                 fullWidth
