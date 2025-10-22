@@ -1,5 +1,5 @@
+using BookStack.Api.Models.GoogleBooks;
 using BookStack.Api.Services;
-using HotChocolate.Types;
 
 namespace BookStack.Api.GraphQL;
 

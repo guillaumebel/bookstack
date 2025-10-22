@@ -1,5 +1,6 @@
 using BookStack.Api.Data;
 using BookStack.Api.Models;
+using BookStack.Api.Models.Mutations;
 using BookStack.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -173,25 +174,5 @@ public class Mutation
   }
 }
 
-public record AddBookInput(
-    string Title,
-    string? Isbn,
-    string? Description,
-    DateTime? PublishedDate,
-    int? PageCount,
-    string? Thumbnail,
-    string? Language,
-    string? GoogleBooksId,
-    List<int>? AuthorIds,
-    List<int>? CategoryIds
-);
 
-public record UpdateBookInput(
-    string? Title,
-    string? Isbn,
-    string? Description,
-    DateTime? PublishedDate,
-    int? PageCount,
-    string? Thumbnail,
-    string? Language
-);
+

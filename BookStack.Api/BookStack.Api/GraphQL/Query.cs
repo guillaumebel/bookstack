@@ -1,6 +1,5 @@
 using BookStack.Api.Data;
 using BookStack.Api.Models;
-using HotChocolate.Types;
 
 namespace BookStack.Api.GraphQL;
 

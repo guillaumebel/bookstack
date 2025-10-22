@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using BookStack.Api.Models.GoogleBooks;
 using BookStack.Api.Services;
 using Moq;
 using Moq.Protected;

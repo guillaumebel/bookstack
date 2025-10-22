@@ -1,5 +1,6 @@
 ﻿using BookStack.Api.GraphQL;
 using BookStack.Api.Models;
+using BookStack.Api.Models.Mutations;
 
 namespace BookStack.Api.Tests.GraphQL;
 
