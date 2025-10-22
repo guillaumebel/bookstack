@@ -34,19 +34,23 @@ import { z } from "zod";
 import { ADD_AUTHOR } from "../graphql/mutations";
 import { GET_AUTHORS } from "../graphql/queries";
 
-// Form validation schema
-const authorSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Author name is required")
-    .min(2, "Name must be at least 2 characters"),
-});
+// Form validation schema factory
+const createAuthorSchema = (t: (key: string) => string) =>
+  z.object({
+    name: z
+      .string()
+      .min(1, t("authors.validation.nameRequired"))
+      .min(2, t("authors.validation.nameMinLength")),
+  });
 
-type AuthorFormData = z.infer<typeof authorSchema>;
+type AuthorFormData = z.infer<ReturnType<typeof createAuthorSchema>>;
 
 export const AuthorsPage: React.FC = () => {
   const { t } = useTranslation();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  // Create the schema with translations
+  const authorSchema = createAuthorSchema(t);
 
   // GraphQL queries and mutations
   const { data, loading, error, refetch } = useQuery(GET_AUTHORS);
@@ -136,7 +140,7 @@ export const AuthorsPage: React.FC = () => {
             {t("authors.noAuthors")}
           </Typography>
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            Start by adding your first author.
+            {t("authors.startByAdding")}
           </Typography>
           <Button
             variant="contained"
@@ -152,9 +156,9 @@ export const AuthorsPage: React.FC = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Created At</TableCell>
-                <TableCell>Books Count</TableCell>
+                <TableCell>{t("authors.table.name")}</TableCell>
+                <TableCell>{t("authors.table.createdAt")}</TableCell>
+                <TableCell>{t("authors.table.booksCount")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -201,7 +205,7 @@ export const AuthorsPage: React.FC = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            Add New Author
+            {t("authors.addNewAuthor")}
             <IconButton onClick={handleCloseDialog} size="small">
               <CloseIcon />
             </IconButton>
@@ -222,12 +226,12 @@ export const AuthorsPage: React.FC = () => {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Author Name"
+                  label={t("authors.authorName")}
                   fullWidth
                   required
                   error={!!errors.name}
                   helperText={errors.name?.message}
-                  placeholder="Enter author's full name"
+                  placeholder={t("authors.enterAuthorName")}
                   autoFocus
                 />
               )}
@@ -236,7 +240,7 @@ export const AuthorsPage: React.FC = () => {
 
           <DialogActions>
             <Button onClick={handleCloseDialog} disabled={addLoading}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
@@ -246,7 +250,7 @@ export const AuthorsPage: React.FC = () => {
                 addLoading ? <CircularProgress size={20} /> : <AddIcon />
               }
             >
-              Add Author
+              {t("authors.addAuthor")}
             </Button>
           </DialogActions>
         </form>

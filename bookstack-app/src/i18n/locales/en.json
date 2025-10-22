@@ -68,11 +68,39 @@
   },
   "authors": {
     "title": "Authors",
-    "noAuthors": "No authors found"
+    "noAuthors": "No authors found",
+    "addAuthor": "Add Author",
+    "addNewAuthor": "Add New Author",
+    "authorName": "Author Name",
+    "enterAuthorName": "Enter author's full name",
+    "startByAdding": "Start by adding your first author.",
+    "table": {
+      "name": "Name",
+      "createdAt": "Created At",
+      "booksCount": "Books Count"
+    },
+    "validation": {
+      "nameRequired": "Author name is required",
+      "nameMinLength": "Name must be at least 2 characters"
+    }
   },
   "categories": {
     "title": "Categories",
-    "noCategories": "No categories found"
+    "noCategories": "No categories found",
+    "addCategory": "Add Category",
+    "addNewCategory": "Add New Category",
+    "categoryName": "Category Name",
+    "enterCategoryName": "e.g., Science Fiction, Biography, Programming",
+    "startByAdding": "Start by adding your first category.",
+    "table": {
+      "name": "Name",
+      "createdAt": "Created At",
+      "booksCount": "Books Count"
+    },
+    "validation": {
+      "nameRequired": "Category name is required",
+      "nameMinLength": "Name must be at least 2 characters"
+    }
   },
   "dashboard": {
     "title": "Dashboard",

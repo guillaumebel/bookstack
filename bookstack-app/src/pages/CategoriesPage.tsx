@@ -34,21 +34,24 @@ import { z } from "zod";
 import { ADD_CATEGORY } from "../graphql/mutations";
 import { GET_CATEGORIES } from "../graphql/queries";
 
-// Form validation schema
-const categorySchema = z.object({
-  name: z
-    .string()
-    .min(1, "Category name is required")
-    .min(2, "Name must be at least 2 characters"),
-});
+// Form validation schema factory
+const createCategorySchema = (t: (key: string) => string) =>
+  z.object({
+    name: z
+      .string()
+      .min(1, t("categories.validation.nameRequired"))
+      .min(2, t("categories.validation.nameMinLength")),
+  });
 
-type CategoryFormData = z.infer<typeof categorySchema>;
+type CategoryFormData = z.infer<ReturnType<typeof createCategorySchema>>;
 
 export const CategoriesPage: React.FC = () => {
   const { t } = useTranslation();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  // GraphQL queries and mutations
+  // Create the schema with translations
+  const categorySchema = createCategorySchema(t);
+
   const { data, loading, error, refetch } = useQuery(GET_CATEGORIES);
   const [addCategory, { loading: addLoading, error: addError }] = useMutation(
     ADD_CATEGORY,
@@ -137,7 +140,7 @@ export const CategoriesPage: React.FC = () => {
             {t("categories.noCategories")}
           </Typography>
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            Start by adding your first category.
+            {t("categories.startByAdding")}
           </Typography>
           <Button
             variant="contained"
@@ -153,9 +156,9 @@ export const CategoriesPage: React.FC = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Created At</TableCell>
-                <TableCell>Books Count</TableCell>
+                <TableCell>{t("categories.table.name")}</TableCell>
+                <TableCell>{t("categories.table.createdAt")}</TableCell>
+                <TableCell>{t("categories.table.booksCount")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -202,7 +205,7 @@ export const CategoriesPage: React.FC = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            Add New Category
+            {t("categories.addNewCategory")}
             <IconButton onClick={handleCloseDialog} size="small">
               <CloseIcon />
             </IconButton>
@@ -223,12 +226,12 @@ export const CategoriesPage: React.FC = () => {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Category Name"
+                  label={t("categories.categoryName")}
                   fullWidth
                   required
                   error={!!errors.name}
                   helperText={errors.name?.message}
-                  placeholder="e.g., Science Fiction, Biography, Programming"
+                  placeholder={t("categories.enterCategoryName")}
                   autoFocus
                 />
               )}
@@ -237,7 +240,7 @@ export const CategoriesPage: React.FC = () => {
 
           <DialogActions>
             <Button onClick={handleCloseDialog} disabled={addLoading}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               type="submit"
@@ -247,7 +250,7 @@ export const CategoriesPage: React.FC = () => {
                 addLoading ? <CircularProgress size={20} /> : <AddIcon />
               }
             >
-              Add Category
+              {t("categories.addCategory")}
             </Button>
           </DialogActions>
         </form>

@@ -190,10 +190,12 @@ export const GoogleBooksSearchPage: React.FC = () => {
               label={t("import.searchLabel")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <SearchIcon sx={{ mr: 1, color: "text.secondary" }} />
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <SearchIcon sx={{ mr: 1, color: "text.secondary" }} />
+                  ),
+                },
               }}
               placeholder={t("import.searchPlaceholder")}
             />

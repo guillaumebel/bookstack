@@ -135,7 +135,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             sx={{
               mt: 2,
               p: 2,
-              bgcolor: "grey.100",
               borderRadius: 1,
               width: "100%",
             }}

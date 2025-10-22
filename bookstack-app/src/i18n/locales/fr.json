@@ -66,11 +66,39 @@
   },
   "authors": {
     "title": "Auteurs",
-    "noAuthors": "Aucun auteur trouvé"
+    "noAuthors": "Aucun auteur trouvé",
+    "addAuthor": "Ajouter un auteur",
+    "addNewAuthor": "Ajouter un nouvel auteur",
+    "authorName": "Nom de l'auteur",
+    "enterAuthorName": "Entrez le nom complet de l'auteur",
+    "startByAdding": "Commencez par ajouter votre premier auteur.",
+    "table": {
+      "name": "Nom",
+      "createdAt": "Créé le",
+      "booksCount": "Nombre de livres"
+    },
+    "validation": {
+      "nameRequired": "Le nom de l'auteur est requis",
+      "nameMinLength": "Le nom doit contenir au moins 2 caractères"
+    }
   },
   "categories": {
     "title": "Catégories",
-    "noCategories": "Aucune catégorie trouvée"
+    "noCategories": "Aucune catégorie trouvée",
+    "addCategory": "Ajouter une catégorie",
+    "addNewCategory": "Ajouter une nouvelle catégorie",
+    "categoryName": "Nom de la catégorie",
+    "enterCategoryName": "ex: Science-fiction, Biographie, Programmation",
+    "startByAdding": "Commencez par ajouter votre première catégorie.",
+    "table": {
+      "name": "Nom",
+      "createdAt": "Créé le",
+      "booksCount": "Nombre de livres"
+    },
+    "validation": {
+      "nameRequired": "Le nom de la catégorie est requis",
+      "nameMinLength": "Le nom doit contenir au moins 2 caractères"
+    }
   },
   "dashboard": {
     "title": "Tableau de bord",

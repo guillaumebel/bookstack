@@ -108,8 +108,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, onLogout }) => {
         sx={{
           flexGrow: 1,
           bgcolor: "background.default",
-          px: 2, // Small horizontal padding
-          py: 3, // Vertical padding for content spacing
+          px: 2,
+          py: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           display: "flex",
           flexDirection: "column",
