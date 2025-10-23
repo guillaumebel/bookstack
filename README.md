@@ -25,6 +25,11 @@ A complete book catalog management system using a .NET 9 GraphQL API backend and
 - **Theme System** - Light/dark mode toggle with persistent preferences
 - **Docker Ready** - Containerized for easy deployment
 
+#### Screenshots
+
+![alt text](assets/screenshot2.png)
+![alt text](assets/screenshot1.png)
+
 ## 🏗️ Project Structure
 
 ```
