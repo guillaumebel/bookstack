@@ -1,10 +1,10 @@
 ﻿overwrite: true
+schema: http://localhost:5009/graphql
+documents:
+  - './src/graphql/queries/**/*.ts'
+  - './src/graphql/mutations/**/*.ts'
 generates:
-  ./src/graphql/generated.ts:
-    schema: http://localhost:5000/graphql
-    documents: 
-      - './src/graphql/**/*.graphql'
-      - './src/graphql/**/*.ts'
+  ./src/graphql/__generated__/types.ts:
     plugins:
       - typescript
       - typescript-operations
@@ -13,3 +13,16 @@ generates:
       withHooks: true
       withComponent: false
       withHOC: false
+      avoidOptionals: false
+      maybeValue: T | null
+      skipTypename: false
+      preResolveTypes: true
+      noExport: false
+      onlyOperationTypes: false
+      omitOperationSuffix: false
+      dedupeOperationSuffix: true
+      exportFragmentSpreadSubTypes: true
+      addDocBlocks: false
+      defaultBaseOptions: {}
+      enumsAsConst: true
+      constEnums: false

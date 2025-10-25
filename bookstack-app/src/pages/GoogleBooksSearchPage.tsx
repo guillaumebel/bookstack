@@ -1,5 +1,4 @@
-﻿import { useLazyQuery, useMutation, useQuery } from "@apollo/client/react";
-import {
+﻿import {
   CloudDownload as ImportIcon,
   Search as SearchIcon,
 } from "@mui/icons-material";
@@ -16,15 +15,14 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GoogleBookCard } from "../components/GoogleBookCard";
-import { IMPORT_BOOK_FROM_GOOGLE } from "../graphql/mutations";
-import { GET_BOOKS, SEARCH_GOOGLE_BOOKS } from "../graphql/queries";
+import {
+  useGetBooksQuery,
+  useImportBookFromGoogleMutation,
+  useSearchGoogleBooksLazyQuery,
+  type GetBooksQuery,
+} from "../graphql/__generated__/types";
+import { GET_BOOKS } from "../graphql/queries";
 import { useDebounce } from "../hooks/useDebounce";
-import type {
-  GetBooksQueryResponse,
-  GoogleBookItem,
-  GoogleBooksResponse,
-  SearchGoogleBooksQueryResponse,
-} from "../types/graphql";
 
 export const GoogleBooksSearchPage: React.FC = () => {
   const { t } = useTranslation();
@@ -37,17 +35,16 @@ export const GoogleBooksSearchPage: React.FC = () => {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   // Get existing books to check for duplicates
-  const { data: existingBooksData } =
-    useQuery<GetBooksQueryResponse>(GET_BOOKS);
+  const { data: existingBooksData } = useGetBooksQuery();
 
   // Search Google Books
   const [
     searchGoogleBooks,
     { data: searchData, loading: searchLoading, error: searchError },
-  ] = useLazyQuery<SearchGoogleBooksQueryResponse>(SEARCH_GOOGLE_BOOKS);
+  ] = useSearchGoogleBooksLazyQuery();
 
   // Import mutation
-  const [importBookFromGoogle] = useMutation(IMPORT_BOOK_FROM_GOOGLE, {
+  const [importBookFromGoogle] = useImportBookFromGoogleMutation({
     refetchQueries: [{ query: GET_BOOKS }],
   });
 
@@ -72,7 +69,7 @@ export const GoogleBooksSearchPage: React.FC = () => {
     (googleBookId: string) => {
       if (!existingBooksData?.books) return false;
       return existingBooksData.books.some(
-        (book: any) => book.googleBooksId === googleBookId
+        (book: GetBooksQuery["books"][0]) => book.googleBooksId === googleBookId
       );
     },
     [existingBooksData]
@@ -140,10 +137,10 @@ export const GoogleBooksSearchPage: React.FC = () => {
     if (!searchData?.searchGoogleBooks?.items) return;
 
     const availableBooks = searchData.searchGoogleBooks.items.filter(
-      (book: GoogleBookItem) => !isBookAlreadyImported(book.id)
+      (book) => !isBookAlreadyImported(book.id)
     );
 
-    const allSelected = availableBooks.every((book: GoogleBookItem) =>
+    const allSelected = availableBooks.every((book) =>
       selectedBooks.has(book.id)
     );
 
@@ -151,24 +148,20 @@ export const GoogleBooksSearchPage: React.FC = () => {
       // Deselect all
       setSelectedBooks((prev) => {
         const newSet = new Set(prev);
-        availableBooks.forEach((book: GoogleBookItem) =>
-          newSet.delete(book.id)
-        );
+        availableBooks.forEach((book) => newSet.delete(book.id));
         return newSet;
       });
     } else {
       // Select all available
       setSelectedBooks((prev) => {
         const newSet = new Set(prev);
-        availableBooks.forEach((book: GoogleBookItem) => newSet.add(book.id));
+        availableBooks.forEach((book) => newSet.add(book.id));
         return newSet;
       });
     }
   };
 
-  const searchResults = searchData?.searchGoogleBooks as
-    | GoogleBooksResponse
-    | undefined;
+  const searchResults = searchData?.searchGoogleBooks;
   const hasResults =
     searchResults && searchResults.items && searchResults.items.length > 0;
   const selectedCount = selectedBooks.size;
@@ -262,7 +255,7 @@ export const GoogleBooksSearchPage: React.FC = () => {
 
       {hasResults && (
         <Grid container spacing={2}>
-          {searchResults.items.map((book: GoogleBookItem) => (
+          {searchResults.items.map((book) => (
             <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={book.id}>
               <GoogleBookCard
                 book={book}

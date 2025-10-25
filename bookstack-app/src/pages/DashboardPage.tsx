@@ -1,5 +1,4 @@
-﻿import { useQuery } from "@apollo/client/react";
-import {
+﻿import {
   Add as AddIcon,
   Book as BookIcon,
   Category as CategoryIcon,
@@ -25,13 +24,11 @@ import {
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { GET_AUTHORS, GET_BOOKS, GET_CATEGORIES } from "../graphql/queries";
-import type {
-  Book,
-  GetAuthorsQueryResponse,
-  GetBooksQueryResponse,
-  GetCategoriesQueryResponse,
-} from "../types/graphql";
+import {
+  useGetAuthorsQuery,
+  useGetBooksQuery,
+  useGetCategoriesQuery,
+} from "../graphql/__generated__/types";
 
 export const DashboardPage: React.FC = () => {
   const { t } = useTranslation();
@@ -42,17 +39,17 @@ export const DashboardPage: React.FC = () => {
     data: booksData,
     loading: booksLoading,
     error: booksError,
-  } = useQuery<GetBooksQueryResponse>(GET_BOOKS);
+  } = useGetBooksQuery();
   const {
     data: authorsData,
     loading: authorsLoading,
     error: authorsError,
-  } = useQuery<GetAuthorsQueryResponse>(GET_AUTHORS);
+  } = useGetAuthorsQuery();
   const {
     data: categoriesData,
     loading: categoriesLoading,
     error: categoriesError,
-  } = useQuery<GetCategoriesQueryResponse>(GET_CATEGORIES);
+  } = useGetCategoriesQuery();
 
   // Loading state for any of the queries
   const isLoading = booksLoading || authorsLoading || categoriesLoading;
@@ -69,7 +66,7 @@ export const DashboardPage: React.FC = () => {
   const recentBooks = booksData?.books
     ? [...booksData.books]
         .sort(
-          (a: Book, b: Book) =>
+          (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
         .slice(0, 5)
@@ -195,7 +192,7 @@ export const DashboardPage: React.FC = () => {
           </Alert>
         ) : recentBooks.length > 0 ? (
           <List>
-            {recentBooks.map((book: Book) => (
+            {recentBooks.map((book) => (
               <ListItem
                 key={book.id}
                 sx={{
@@ -208,7 +205,7 @@ export const DashboardPage: React.FC = () => {
               >
                 <ListItemAvatar>
                   <Avatar
-                    src={book.thumbnail}
+                    src={book.thumbnail || undefined}
                     variant="rounded"
                     sx={{ width: 56, height: 80, mr: 2 }}
                   >

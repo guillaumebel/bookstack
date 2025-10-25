@@ -66,6 +66,9 @@ export const GET_AUTHORS = gql`
       id
       name
       createdAt
+      bookAuthors {
+        bookId
+      }
     }
   }
 `;
@@ -76,6 +79,9 @@ export const GET_CATEGORIES = gql`
       id
       name
       createdAt
+      bookCategories {
+        bookId
+      }
     }
   }
 `;

@@ -1,5 +1,4 @@
-﻿import { useMutation, useQuery } from "@apollo/client/react";
-import { zodResolver } from "@hookform/resolvers/zod";
+﻿import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Add as AddIcon,
   Category as CategoryIcon,
@@ -31,8 +30,11 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { ADD_CATEGORY } from "../graphql/mutations";
-import { GET_CATEGORIES } from "../graphql/queries";
+import {
+  useAddCategoryMutation,
+  useGetCategoriesQuery,
+  type GetCategoriesQuery,
+} from "../graphql/__generated__/types";
 
 // Form validation schema factory
 const createCategorySchema = (t: (key: string) => string) =>
@@ -52,16 +54,14 @@ export const CategoriesPage: React.FC = () => {
   // Create the schema with translations
   const categorySchema = createCategorySchema(t);
 
-  const { data, loading, error, refetch } = useQuery(GET_CATEGORIES);
-  const [addCategory, { loading: addLoading, error: addError }] = useMutation(
-    ADD_CATEGORY,
-    {
+  const { data, loading, error, refetch } = useGetCategoriesQuery();
+  const [addCategory, { loading: addLoading, error: addError }] =
+    useAddCategoryMutation({
       onCompleted: () => {
         handleCloseDialog();
         refetch();
       },
-    }
-  );
+    });
 
   // Form setup
   const {
@@ -76,7 +76,7 @@ export const CategoriesPage: React.FC = () => {
     },
   });
 
-  const categories = (data as any)?.categories || [];
+  const categories = data?.categories || [];
 
   const handleOpenDialog = () => {
     reset();
@@ -162,31 +162,33 @@ export const CategoriesPage: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {categories.map((category: any) => (
-                <TableRow key={category.id} hover>
-                  <TableCell>
-                    <Box display="flex" alignItems="center">
-                      <CategoryIcon sx={{ mr: 2, color: "text.secondary" }} />
-                      <Typography variant="subtitle1" fontWeight="medium">
-                        {category.name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    {category.createdAt
-                      ? new Date(category.createdAt).toLocaleDateString()
-                      : "-"}
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={category.booksCount || 0}
-                      size="small"
-                      variant="outlined"
-                      color="secondary"
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {categories.map(
+                (category: GetCategoriesQuery["categories"][0]) => (
+                  <TableRow key={category.id} hover>
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <CategoryIcon sx={{ mr: 2, color: "text.secondary" }} />
+                        <Typography variant="subtitle1" fontWeight="medium">
+                          {category.name}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      {category.createdAt
+                        ? new Date(category.createdAt).toLocaleDateString()
+                        : "-"}
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={category.bookCategories?.length || 0}
+                        size="small"
+                        variant="outlined"
+                        color="secondary"
+                      />
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
             </TableBody>
           </Table>
         </TableContainer>

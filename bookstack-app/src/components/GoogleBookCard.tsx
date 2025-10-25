@@ -18,26 +18,11 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import type { SearchGoogleBooksQuery } from "../graphql/__generated__/types";
 
-interface GoogleBookItem {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    description?: string;
-    publishedDate?: string;
-    pageCount?: number;
-    categories?: string[];
-    language?: string;
-    imageLinks?: {
-      thumbnail?: string;
-    };
-    industryIdentifiers?: Array<{
-      type: string;
-      identifier: string;
-    }>;
-  };
-}
+type GoogleBookItem = NonNullable<
+  SearchGoogleBooksQuery["searchGoogleBooks"]
+>["items"][number];
 
 interface GoogleBookCardProps {
   book: GoogleBookItem;

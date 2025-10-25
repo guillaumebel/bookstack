@@ -1,5 +1,4 @@
-﻿import { useMutation, useQuery } from "@apollo/client/react";
-import {
+﻿import {
   Add as AddIcon,
   Book as BookIcon,
   Delete as DeleteIcon,
@@ -25,16 +24,19 @@ import {
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { DELETE_BOOK } from "../graphql/mutations";
-import { GET_BOOKS } from "../graphql/queries";
+import {
+  useDeleteBookMutation,
+  useGetBooksQuery,
+  type GetBooksQuery,
+} from "../graphql/__generated__/types";
 
 export const BooksPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [deleteBookId, setDeleteBookId] = useState<number | null>(null);
 
-  const { data, loading, error, refetch } = useQuery(GET_BOOKS);
-  const [deleteBook] = useMutation(DELETE_BOOK, {
+  const { data, loading, error, refetch } = useGetBooksQuery();
+  const [deleteBook] = useDeleteBookMutation({
     onCompleted: () => {
       refetch();
       setDeleteBookId(null);
@@ -73,7 +75,7 @@ export const BooksPage: React.FC = () => {
     );
   }
 
-  const books = (data as any)?.books || [];
+  const books = data?.books || [];
 
   return (
     <Box>
@@ -126,11 +128,11 @@ export const BooksPage: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {books.map((book: any) => (
+              {books.map((book: GetBooksQuery["books"][0]) => (
                 <TableRow key={book.id} hover>
                   <TableCell>
                     <Avatar
-                      src={book.thumbnail}
+                      src={book.thumbnail || undefined}
                       variant="rounded"
                       sx={{ width: 40, height: 56 }}
                     >
@@ -157,7 +159,7 @@ export const BooksPage: React.FC = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    {book.bookAuthors?.map((ba: any) => (
+                    {book.bookAuthors?.map((ba) => (
                       <Chip
                         key={ba.author.id}
                         label={ba.author.name}
@@ -168,7 +170,7 @@ export const BooksPage: React.FC = () => {
                     ))}
                   </TableCell>
                   <TableCell>
-                    {book.bookCategories?.map((bc: any) => (
+                    {book.bookCategories?.map((bc) => (
                       <Chip
                         key={bc.category.id}
                         label={bc.category.name}

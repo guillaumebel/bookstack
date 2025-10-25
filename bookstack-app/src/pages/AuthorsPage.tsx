@@ -1,5 +1,4 @@
-﻿import { useMutation, useQuery } from "@apollo/client/react";
-import { zodResolver } from "@hookform/resolvers/zod";
+﻿import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Add as AddIcon,
   Close as CloseIcon,
@@ -31,8 +30,11 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { ADD_AUTHOR } from "../graphql/mutations";
-import { GET_AUTHORS } from "../graphql/queries";
+import {
+  useAddAuthorMutation,
+  useGetAuthorsQuery,
+  type GetAuthorsQuery,
+} from "../graphql/__generated__/types";
 
 // Form validation schema factory
 const createAuthorSchema = (t: (key: string) => string) =>
@@ -53,16 +55,14 @@ export const AuthorsPage: React.FC = () => {
   const authorSchema = createAuthorSchema(t);
 
   // GraphQL queries and mutations
-  const { data, loading, error, refetch } = useQuery(GET_AUTHORS);
-  const [addAuthor, { loading: addLoading, error: addError }] = useMutation(
-    ADD_AUTHOR,
-    {
+  const { data, loading, error, refetch } = useGetAuthorsQuery();
+  const [addAuthor, { loading: addLoading, error: addError }] =
+    useAddAuthorMutation({
       onCompleted: () => {
         handleCloseDialog();
         refetch();
       },
-    }
-  );
+    });
 
   // Form setup
   const {
@@ -77,7 +77,7 @@ export const AuthorsPage: React.FC = () => {
     },
   });
 
-  const authors = (data as any)?.authors || [];
+  const authors = data?.authors || [];
 
   const handleOpenDialog = () => {
     reset();
@@ -162,7 +162,7 @@ export const AuthorsPage: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {authors.map((author: any) => (
+              {authors.map((author: GetAuthorsQuery["authors"][0]) => (
                 <TableRow key={author.id} hover>
                   <TableCell>
                     <Box display="flex" alignItems="center">
@@ -179,7 +179,7 @@ export const AuthorsPage: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <Chip
-                      label={author.booksCount || 0}
+                      label={author.bookAuthors?.length || 0}
                       size="small"
                       variant="outlined"
                       color="primary"

@@ -1,5 +1,4 @@
-﻿import { useMutation, useQuery } from "@apollo/client/react";
-import { zodResolver } from "@hookform/resolvers/zod";
+﻿import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Alert,
   Autocomplete,
@@ -20,12 +19,15 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { ADD_BOOK, UPDATE_BOOK } from "../graphql/mutations";
 import {
-  GET_AUTHORS,
-  GET_BOOK_BY_ID,
-  GET_CATEGORIES,
-} from "../graphql/queries";
+  useAddBookMutation,
+  useGetAuthorsQuery,
+  useGetBookByIdQuery,
+  useGetCategoriesQuery,
+  useUpdateBookMutation,
+  type GetAuthorsQuery,
+  type GetCategoriesQuery,
+} from "../graphql/__generated__/types";
 
 const createBookSchema = (t: (key: string) => string) =>
   z.object({
@@ -57,8 +59,12 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
 }) => {
   const { t } = useTranslation();
   const isEditing = !!bookId;
-  const [selectedAuthors, setSelectedAuthors] = useState<any[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
+  const [selectedAuthors, setSelectedAuthors] = useState<
+    Pick<GetAuthorsQuery["authors"][0], "id" | "name">[]
+  >([]);
+  const [selectedCategories, setSelectedCategories] = useState<
+    Pick<GetCategoriesQuery["categories"][0], "id" | "name">[]
+  >([]);
 
   // Create the schema with translations
   const bookSchema = createBookSchema(t);
@@ -87,23 +93,23 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
   });
 
   // GraphQL queries and mutations
-  const { data: authorsData, loading: authorsLoading } = useQuery(GET_AUTHORS);
+  const { data: authorsData, loading: authorsLoading } = useGetAuthorsQuery();
   const { data: categoriesData, loading: categoriesLoading } =
-    useQuery(GET_CATEGORIES);
-  const { data: bookData, loading: bookLoading } = useQuery(GET_BOOK_BY_ID, {
-    variables: { id: bookId },
+    useGetCategoriesQuery();
+  const { data: bookData, loading: bookLoading } = useGetBookByIdQuery({
+    variables: { id: bookId! },
     skip: !isEditing,
   });
 
   const [addBook, { loading: addLoading, error: addError }] =
-    useMutation(ADD_BOOK);
+    useAddBookMutation();
   const [updateBook, { loading: updateLoading, error: updateError }] =
-    useMutation(UPDATE_BOOK);
+    useUpdateBookMutation();
 
   // Populate form when editing
   useEffect(() => {
-    if (isEditing && (bookData as any)?.bookById) {
-      const book = (bookData as any).bookById;
+    if (isEditing && bookData?.bookById) {
+      const book = bookData.bookById;
 
       reset({
         title: book.title || "",
@@ -115,20 +121,19 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
         pageCount: book.pageCount || undefined,
         thumbnail: book.thumbnail || "",
         language: book.language || "",
-        authorIds: book.bookAuthors?.map((ba: any) => ba.author.id) || [],
-        categoryIds:
-          book.bookCategories?.map((bc: any) => bc.category.id) || [],
+        authorIds: book.bookAuthors?.map((ba) => ba.author.id) || [],
+        categoryIds: book.bookCategories?.map((bc) => bc.category.id) || [],
       });
 
-      setSelectedAuthors(book.bookAuthors?.map((ba: any) => ba.author) || []);
+      setSelectedAuthors(book.bookAuthors?.map((ba) => ba.author) || []);
       setSelectedCategories(
-        book.bookCategories?.map((bc: any) => bc.category) || []
+        book.bookCategories?.map((bc) => bc.category) || []
       );
     }
   }, [bookData, isEditing, reset]);
 
-  const authors = (authorsData as any)?.authors || [];
-  const categories = (categoriesData as any)?.categories || [];
+  const authors = authorsData?.authors || [];
+  const categories = categoriesData?.categories || [];
 
   const onSubmit = async (data: BookFormData) => {
     try {
@@ -160,7 +165,10 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
     }
   };
 
-  const handleAuthorChange = (_event: any, newValue: any[]) => {
+  const handleAuthorChange = (
+    _event: React.SyntheticEvent,
+    newValue: Pick<GetAuthorsQuery["authors"][0], "id" | "name">[]
+  ) => {
     setSelectedAuthors(newValue);
     setValue(
       "authorIds",
@@ -169,7 +177,10 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
     trigger("authorIds");
   };
 
-  const handleCategoryChange = (_event: any, newValue: any[]) => {
+  const handleCategoryChange = (
+    _event: React.SyntheticEvent,
+    newValue: Pick<GetCategoriesQuery["categories"][0], "id" | "name">[]
+  ) => {
     setSelectedCategories(newValue);
     setValue(
       "categoryIds",
@@ -344,15 +355,18 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
                   name="authorIds"
                   control={control}
                   render={() => (
-                    <Autocomplete
+                    <Autocomplete<
+                      Pick<GetAuthorsQuery["authors"][0], "id" | "name">,
+                      true
+                    >
                       multiple
                       options={authors}
-                      getOptionLabel={(option: any) => option.name}
+                      getOptionLabel={(option) => option.name}
                       value={selectedAuthors}
                       onChange={handleAuthorChange}
                       disablePortal
                       renderTags={(value, getTagProps) =>
-                        value.map((option: any, index: number) => (
+                        value.map((option, index: number) => (
                           <Chip
                             variant="outlined"
                             label={option.name}
@@ -384,15 +398,18 @@ export const AddEditBookForm: React.FC<AddEditBookFormProps> = ({
                   name="categoryIds"
                   control={control}
                   render={() => (
-                    <Autocomplete
+                    <Autocomplete<
+                      Pick<GetCategoriesQuery["categories"][0], "id" | "name">,
+                      true
+                    >
                       multiple
                       options={categories}
-                      getOptionLabel={(option: any) => option.name}
+                      getOptionLabel={(option) => option.name}
                       value={selectedCategories}
                       onChange={handleCategoryChange}
                       disablePortal
                       renderTags={(value, getTagProps) =>
-                        value.map((option: any, index: number) => (
+                        value.map((option, index: number) => (
                           <Chip
                             variant="outlined"
                             label={option.name}
